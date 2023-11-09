@@ -1,4 +1,4 @@
-onfigures a web server for deployment of web_static.
+# Configure web server .
 
 # Nginx configuration file
 $nginx_conf = "server {
