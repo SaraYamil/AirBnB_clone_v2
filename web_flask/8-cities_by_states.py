@@ -1,73 +1,37 @@
 #!/usr/bin/python3
-""" module doc """
-from flask import Flask
-from flask import render_template
-from models import storage
+
+'''
+A script that starts a Flask web application
+'''
+
+from flask import Flask, render_template
+
 from models.state import State
+from models import storage
+
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
 
 
-@app.route("/", strict_slashes=False)
-def hello():
-    """ def doc """
-    return "Hello HBNB!"
-
-
-@app.route("/hbnb", strict_slashes=False)
-def hbnb():
-    """ def doc """
-    return "HBNB"
-
-
-@app.route('/c/<text>', strict_slashes=False)
-def c(text):
-    """ def doc """
-    return 'c {}'.format(text.replace("_", " "))
-
-
-@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
-def python(text):
-    """ def doc """
-    return 'Python {}'.format(text.replace("_", " "))
-
-
-@app.route('/number/<int:n>', strict_slashes=False)
-def number(n):
-    """ def doc """
-    return '{} is a number'.format(n)
-
-
-@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def number_odd_or_even(n):
-    """ def doc """
-    if n % 2 == 0:
-        p = 'even'
-    else:
-        p = 'odd'
-    return render_template('6-number_odd_or_even.html', number=n, parity=p)
-
-
-@app.route('/states_list', strict_slashes=False)
-def states_list():
-    """ def doc """
-    states = storage.all(State)
-    return render_template('7-states_list.html', states=states)
+@app.route('/cities_by_states')
+def cities_by_states():
+    '''Displays an HTML page with a list of all State objects in DBStorage.'''
+    states = list(storage.all(State).values())
+    states.sort(key=lambda x: x.name)
+    for state in states:
+        state.cities.sort(key=lambda x: x.name)
+    txt = {
+        'states': states
+    }
+    return render_template('8-cities_by_states.html', **txt)
 
 
 @app.teardown_appcontext
-def close(error):
-    """ def doc """
+def flask_teardown(exc):
+    '''Closes the current SQLAlchemy session.'''
     storage.close()
 
 
-@app.route('/cities_by_states', strict_slashes=False)
-def cities_by_states():
-    """ def doc """
-    states = storage.all(State)
-    return render_template('8-cities_by_states.html', states=states)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port='5000')

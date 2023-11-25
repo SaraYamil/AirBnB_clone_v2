@@ -1,147 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
+<HTML lang="en-US">
 
-<head>
-    <title>AirBnB clone</title>
-    <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="static/styles/4-common.css">
-    <link rel="stylesheet" type="text/css" href="static/styles/3-header.css">
-    <link rel="stylesheet" type="text/css" href="static/styles/3-footer.css">
-    <link rel="stylesheet" type="text/css" href="static/styles/6-filters.css">
-    <link rel="stylesheet" type="text/css" href="static/styles/8-places.css">
-    <link rel="icon" href="static/images/icon.png" type="image/png">
-</head>
+<HEAD>
+    <META charset="utf-8">
+    <LINK rel="icon" href="{{ url_for('static', filename = 'images/icon.ico') }}">
+    <TITLE>AirBnB Clone</TITLE>
+    <LINK rel="stylesheet" href="{{ url_for('static', filename = 'styles/4-common.css') }}" />
+    <LINK rel="stylesheet" href="{{ url_for('static', filename = 'styles/3-header.css') }}" />
+    <LINK rel="stylesheet" href="{{ url_for('static', filename = 'styles/3-footer.css') }}" />
+    <LINK rel="stylesheet" href="{{ url_for('static', filename = 'styles/6-filters.css') }}" />
+    <LINK rel="stylesheet" href="{{ url_for('static', filename = 'styles/8-places.css') }}" />
+</HEAD>
 
-<body>
-    <header>
-        <div class="logo"></div>
-    </header>
-    <div class="container">
-        <section class="filters">
-            <div class="locations">
-                <h3>States</h3>
-                <h4>&nbsp;</h4>
+<BODY>
+    <HEADER>
+        <A href="/hbnb"></A>
+    </HEADER>
 
-                <ul class="popover">
-                    {% for state_id, state in states.items()|sort(attribute='1.name') %}
-                    <li><h2>{{ state.name }}:</h2></li>
-                        {% for city in state.cities|sort(attribute='name') %}
-                        <li>{{ city.name }}</li>
-                        {% endfor %}
+    <DIV class="container">
+
+        <SECTION class="filters">
+
+
+            <DIV class="locations">
+                <H3>States</H3>
+                <H4>&nbsp;</H4>
+                <UL class="popover">
+                    {% for state in states %}
+                    <LI>
+                        <H2>{{ state.name }}</H2>
+                        <UL>
+                            {% for city in state.cities %}
+                            <LI>{{ city.name }}</LI>
+                            {% endfor %}
+                        </UL>
+                    </LI>
                     {% endfor %}
-                </ul>
+                </UL>
+            </DIV>
 
 
-            </div>
-            <div class="amenities">
-                <h3>Amenities</h3>
-                <h4>&nbsp;</h4>
-                <ul class="popover">
-                    {% for amenity_id, amenity in amenities.items()|sort(attribute='1.name') %}
-                    <li>{{ amenity.name }}</li>
+            <DIV class="amenities">
+                <H3>Amenities</H3>
+                <H4>&nbsp;</H4>
+                <UL class="popover">
+                    {% for amenity in amenities %}
+                    <LI>{{ amenity.name }}</LI>
                     {% endfor %}
-                </ul>
-            </div>
-            <button>Search</button>
-        </section>
-
-        <section class="places">
-
-            <h1>Places</h1>
-
-            <article>
-                <h2>My home</h2>
-                <div class="price_by_night">
-                    <span>80$</span>
-                </div>
-                <div class="information">
-                    <div class="max_guest">
-                        <span>2 Guests</span>
-                    </div>
-                    <div class="number_rooms">
-                        <span>1 Bedroom</span>
-                    </div>
-                    <div class="number_bathrooms">
-                        <span>1 Bathroom</span>
-                    </div>
-                </div>
-                <div class="user">
-                    <p><span>Owner: </span>John Lennon</p>
-                </div>
-                <div class="description">
-                    This is a lovely 1 bedroom and 1 bathroom apartment that can accomodate 2 people. It locates at the
-                    center of Shanghai and next to subway like 1. 1 stop to People Square, 2 stops to Bund, 3 stops to
-                    Jingan Temple.
-                </div>
-            </article>
+                </UL>
+            </DIV>
+            <BUTTON>Search</BUTTON>
+        </SECTION>
 
 
-
-            <article>
-                <h2>Tiny house</h2>
-                <div class="price_by_night">
-                    <span>65$</span>
-                </div>
-                <div class="information">
-                    <div class="max_guest">
-                        <span>4 Guests</span>
-                    </div>
-                    <div class="number_rooms">
-                        <span>2 Bedrooms</span>
-                    </div>
-                    <div class="number_bathrooms">
-                        <span>1 Bathroom</span>
-                    </div>
-                </div>
-                <div class="user">
-                    <p><span>Owner: </span>Adrienne</p>
-                </div>
-                <div class="description">
-                    Our place is a private, affordable stand-alone guests house centrally located just minutes to French Quarters, downtown, the Fair Grounds (Jazz Fest) and City Park. The guest house is a quaint, 400 square ft. with a full bath, mini kitchen, & living room. The extra high ceilings make the home feel more spacious. The sofa converts to a bed also. We have a hand made counter area that adds character to the room and a great porch/deck to relax on and have a glass of Merlot.
-                </div>
-            </article>
+        <SECTION class="places">
+            <H1>Places</H1>
+            {% for place in places %}
 
 
+            <ARTICLE>
 
 
+                <DIV class="title">
+                    <H2>{{ place.name }}</H2>
+                    <DIV class="price_by_night">${{ place.price_by_night }}</DIV>
+                </DIV>
 
 
-            <article>
-                <h2>A suite</h2>
-                <div class="price_by_night">
-                    <span>190$</span>
-                </div>
-                <div class="information">
-                    <div class="max_guest">
-                        <span>2 Guests</span>
-                    </div>
-                    <div class="number_rooms">
-                        <span>1 Bedroom</span>
-                    </div>
-                    <div class="number_bathrooms">
-                        <span>1 Bathroom</span>
-                    </div>
-                </div>
-                <div class="user">
-                    <p><span>Owner: </span>John Lennon</p>
-                </div>
-                <div class="description">
-                    Step into a cozy retreat featuring a full bath, a compact yet efficient mini kitchen, and a snug living room that opens up with extra-high ceilings. The cleverly designed space makes it feel more expansive than its size suggests. A handmade counter adds a touch of character, while the convertible sofa ensures flexibility in sleeping arrangements.
-                </div>
-            </article>
+                <DIV class="information">
+                    <DIV class="max_guest">
+                        <SVG xmlns="http://www.w3.org/2000/svg" version="1.1" width="24" height="24"
+                            viewBox="0 0 24 24">
+                            <PATH
+                                d="M12,5.5A3.5,3.5 0 0,1 15.5,9A3.5,3.5 0 0,1 12,12.5A3.5,3.5 0 0,1 8.5,9A3.5,3.5 0 0,1 12,5.5M5,8C5.56,8 6.08,8.15 6.53,8.42C6.38,9.85 6.8,11.27 7.66,12.38C7.16,13.34 6.16,14 5,14A3,3 0 0,1 2,11A3,3 0 0,1 5,8M19,8A3,3 0 0,1 22,11A3,3 0 0,1 19,14C17.84,14 16.84,13.34 16.34,12.38C17.2,11.27 17.62,9.85 17.47,8.42C17.92,8.15 18.44,8 19,8M5.5,18.25C5.5,16.18 8.41,14.5 12,14.5C15.59,14.5 18.5,16.18 18.5,18.25V20H5.5V18.25M0,20V18.5C0,17.11 1.89,15.94 4.45,15.6C3.86,16.28 3.5,17.22 3.5,18.25V20H0M24,20H20.5V18.25C20.5,17.22 20.14,16.28 19.55,15.6C22.11,15.94 24,17.11 24,18.5V20Z" />
+                        </SVG>
+                        <DIV>{{ place.max_guest }} Guest</DIV>
+                    </DIV>
+                    <DIV class="number_rooms">
+                        <SVG xmlns="http://www.w3.org/2000/svg" version="1.1" width="24" height="24"
+                            viewBox="0 0 24 24">
+                            <PATH
+                                d="M19,7H11V14H3V5H1V20H3V17H21V20H23V11A4,4 0 0,0 19,7M7,13A3,3 0 0,0 10,10A3,3 0 0,0 7,7A3,3 0 0,0 4,10A3,3 0 0,0 7,13Z" />
+                        </SVG>
+                        <DIV>{{ place.number_rooms }} Room</DIV>
+                    </DIV>
+                    <DIV class="number_bathrooms">
+                        <SVG xmlns="http://www.w3.org/2000/svg" version="1.1" width="24" height="24"
+                            viewBox="0 0 24 24">
+                            <PATH
+                                d="M21,14V15C21,16.91 19.93,18.57 18.35,19.41L19,22H17L16.5,20C16.33,20 16.17,20 16,20H8C7.83,20 7.67,20 7.5,20L7,22H5L5.65,19.41C4.07,18.57 3,16.91 3,15V14H2V12H20V5A1,1 0 0,0 19,4C18.5,4 18.12,4.34 18,4.79C18.63,5.33 19,6.13 19,7H13A3,3 0 0,1 16,4C16.06,4 16.11,4 16.17,4C16.58,2.84 17.69,2 19,2A3,3 0 0,1 22,5V14H21V14M19,14H5V15A3,3 0 0,0 8,18H16A3,3 0 0,0 19,15V14Z" />
+                        </SVG>
+                        <DIV>{{ place.number_bathrooms }} Bathroom</DIV>
+                    </DIV>
+                </DIV>
 
 
+                <DIV class="user">
+                    <B>Owner:</B> {{ place.user.first_name }} {{ place.user.last_name }}
+                </DIV>
 
 
+                <DIV class="description">
+                    {{ place.description }}
+                </DIV>
 
 
-        </section>
-    </div>
-    <footer>
-        Best School
-    </footer>
-</body>
-
-</html>
+            </ARTICLE>
+            {% endfor %}
 
 
+        </SECTION>
+
+
+    </DIV>
+
+    <FOOTER>
+        Holberton School
+    </FOOTER>
+</BODY>
+
+</HTML>

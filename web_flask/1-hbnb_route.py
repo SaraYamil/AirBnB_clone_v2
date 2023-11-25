@@ -1,21 +1,21 @@
 #!/usr/bin/python3
-""" module doc """
+
+'''Script that starts a Flask web application'''
+
 from flask import Flask
 
 app = Flask(__name__)
 
 
-@app.route("/", strict_slashes=False)
-def hello():
-    """ def doc """
+@app.route('/', strict_slashes=False)
+def index():
     return "Hello HBNB!"
 
 
-@app.route("/hbnb", strict_slashes=False)
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
-    """ def doc """
     return "HBNB"
 
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)

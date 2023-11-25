@@ -1,90 +1,57 @@
 #!/usr/bin/python3
-""" module doc """
-from flask import Flask
-from flask import render_template
+
+'''
+A script that starts a Flask web application
+'''
+
 from models import storage
 from models.state import State
+from flask import Flask, render_template
+
 
 app = Flask(__name__)
+'''The Flask application instance.'''
+app.url_map.strict_slashes = False
 
 
-@app.route("/", strict_slashes=False)
-def hello():
-    """ def doc """
-    return "Hello HBNB!"
-
-
-@app.route("/hbnb", strict_slashes=False)
-def hbnb():
-    """ def doc """
-    return "HBNB"
-
-
-@app.route('/c/<text>', strict_slashes=False)
-def c(text):
-    """ def doc """
-    return 'c {}'.format(text.replace("_", " "))
-
-
-@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
-@app.route('/python/<text>', strict_slashes=False)
-def python(text):
-    """ def doc """
-    return 'Python {}'.format(text.replace("_", " "))
-
-
-@app.route('/number/<int:n>', strict_slashes=False)
-def number(n):
-    """ def doc """
-    return '{} is a number'.format(n)
-
-
-@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
-def number_odd_or_even(n):
-    """ def doc """
-    if n % 2 == 0:
-        p = 'even'
+@app.route('/states')
+@app.route('/states/<id>')
+def states(id=None):
+    '''
+    Displays an HTML page with a list of all State objects in DBStorage.
+    If id is not None, displays an HTML page with a list of all City objects
+    linked to the State with the given id.
+    '''
+    states = None
+    state = None
+    every_state = list(storage.all(State).values())
+    case = 404
+    if id is not None:
+        result = list(filter(lambda x: x.id == id, every_state))
+        if len(result) > 0:
+            state = result[0]
+            state.cities.sort(key=lambda x: x.name)
+            case = 2
     else:
-        p = 'odd'
-    return render_template('6-number_odd_or_even.html', number=n, parity=p)
+        states = every_state
+        for state in states:
+            state.cities.sort(key=lambda x: x.name)
+        states.sort(key=lambda x: x.name)
+        case = 1
+    txt = {
+        'states': states,
+        'state': state,
+        'case': case
+    }
 
-
-@app.route('/states_list', strict_slashes=False)
-def states_list():
-    """ def doc """
-    states = storage.all(State)
-    return render_template('7-states_list.html', states=states)
+    return render_template('9-states.html', **txt)
 
 
 @app.teardown_appcontext
-def close(error):
-    """ def doc """
+def flask_teardown(exc):
+    '''Closes the current SQLAlchemy session.'''
     storage.close()
 
 
-@app.route('/cities_by_states', strict_slashes=False)
-def cities_by_states():
-    """ def doc """
-    states = storage.all(State)
-    return render_template('8-cities_by_states.html', states=states)
-
-
-@app.route('/states', strict_slashes=False)
-@app.route('/states/<id>', strict_slashes=False)
-def states(id=None):
-    """ Route function for /states and /states/<id> """
-    not_found = False
-    if id is not None:
-        states = storage.all(State, id)
-        with_id = True
-        if len(states) == 0:
-            not_found = True
-    else:
-        states = storage.all(State)
-        with_id = False
-    return render_template('9-states.html', states=states,
-                           with_id=with_id, not_found=not_found)
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port='5000')
